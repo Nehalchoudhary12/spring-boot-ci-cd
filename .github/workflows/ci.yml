@@ -1,25 +1,32 @@
-name: CI Build
+name: Java CI on Windows
 
+# Trigger workflow on push or pull request to main branch
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
   pull_request:
-    branches: ["main"]
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    # 1️⃣ Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Setup JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+    # 2️⃣ Set up Java
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
 
-      - name: Build and test (using Maven wrapper)
-        run: |
-          chmod +x mvnw
-          ./mvnw -B clean test
+    # 3️⃣ Build with Maven wrapper
+    - name: Build project with Maven
+      run: mvnw.cmd clean install
+
+    # 4️⃣ Optional: Run tests
+    - name: Run unit tests
+      run: mvnw.cmd test
